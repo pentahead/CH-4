@@ -11,7 +11,6 @@ exports.getStudentById = async (id) => {
   if (!student) {
     throw new NotFoundError("Student is Not Found!");
   }
-
   return student;
 };
 
@@ -20,8 +19,6 @@ exports.createStudent = async (data, file) => {
   if (file?.profile_picture) {
     data.profile_picture = await imageUpload(file.profile_picture);
   }
-
-  // Create the data
   return studentRepository.createStudent(data);
 };
 
@@ -48,7 +45,6 @@ exports.updateStudent = async (id, data, file) => {
   if (!updatedStudent) {
     throw new InternalServerError(["Failed to update student!"]);
   }
-
   return updatedStudent;
 };
 

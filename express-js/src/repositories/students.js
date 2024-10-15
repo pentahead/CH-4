@@ -1,7 +1,5 @@
-const fs = require("fs");
 const { PrismaClient } = require("@prisma/client");
 const JSONBigInt = require("json-bigint");
-const students = require("../../data/students.json");
 
 const prisma = new PrismaClient();
 
@@ -48,13 +46,11 @@ exports.getStudentById = async (id) => {
 
 exports.createStudent = async (data) => {
   const newStudent = await prisma.students.create({
-    data: {
-      name: data.name,
-      nick_name: data.nick_name,
-      class_id: data.class_id,
-      university_id: data.university_id,
-      profile_picture: data.profile_picture,
+    include: {
+      classes: true,
+      universities: true,
     },
+    data,
   });
 
   const serializedStudents = JSONBigInt.stringify(newStudent);
@@ -66,13 +62,11 @@ exports.updateStudent = async (id, data) => {
     where: {
       id: id,
     },
-    data: {
-      name: data.name,
-      nick_name: data.nick_name,
-      class_id: data.class_id,
-      university_id: data.university_id,
-      profile_picture: data.profile_picture,
+    include: {
+      classes: true,
+      universities: true,
     },
+    data,
   });
   const serializedStudents = JSONBigInt.stringify(updatedStudent);
   return JSONBigInt.parse(serializedStudents);
@@ -80,7 +74,13 @@ exports.updateStudent = async (id, data) => {
 
 exports.deleteStudentById = async (id) => {
   const deletedStudent = await prisma.students.delete({
-    where: { id: id },
+    where: {
+      id: id,
+    },
+    include: {
+      classes: true,
+      universities: true,
+    },
   });
 
   const serializedStudents = JSONBigInt.stringify(deletedStudent);
