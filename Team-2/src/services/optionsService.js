@@ -53,4 +53,5 @@ exports.deleteOptionsById = async (id) => {
   if (!deletedOption) {
     throw new InternalServerError(["Failed to delete Option!"]);
   }
+  return deletedOption;
 };

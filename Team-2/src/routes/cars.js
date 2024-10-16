@@ -10,8 +10,8 @@ router
   .post(carsValidation.validateCreateCar, carsController.createCar);
 router
   .route("/:id")
-  .get(carsValidation.validateGetCarById, carsController.getCarById);
-//   .put(carsValidation.validateUpdateCarById, carsController.updateCarById)
-//   .delete(carsValidation.validateDeleteCarById, carsController.deleteCarById);
+  .get(carsValidation.validateGetCarById, carsController.getCarById)
+  .put(carsValidation.validateUpdateCarById, carsController.updateCarById)
+  .delete(carsValidation.validateDeleteCarById, carsController.deleteCarById);
 
 module.exports = router;

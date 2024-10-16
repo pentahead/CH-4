@@ -23,7 +23,6 @@ exports.updateOptions = async (req, res, next) => {
 };
 
 exports.deleteOptionsById = async (req, res, next) => {
-  const { id } = req.params;
-  const data = await optionsService.deleteOptionsById(id);
+  const data = await optionsService.deleteOptionsById(req.params.id);
   successResponse(res, data);
 };

@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const JSONBigInt = require("json-bigint");
 const { NotFoundError } = require("../utils/request");
+const { number } = require("zod");
 
 const prisma = new PrismaClient();
 
@@ -135,43 +136,44 @@ exports.createCar = async (data) => {
   return JSONBigInt.parse(serializedCars);
 };
 
-// data: {
-//   plate: data.plate,
-//   rentPerDay: data.rentPerDay,
-//   description: data.description,
-//   year: data.year,
-//   image: data.image,
-//   Models: {
-//     create: {
-//       model_name: data.model_name,
-//       capacity: data.capacity,
-//       Transmission: {
-//         connectOrCreate: {
-//           where: { transmission_name: data.transmission_name },
-//           create: { transmission_name: data.transmission_name },
-//         },
-//       },
-//       Manufacture: {
-//         connectOrCreate: {
-//           where: { manufacture_name: data.manufacture_name },
-//           create: {
-//             manufacture_name: data.manufacture_name,
-//             manufacture_region: data.manufacture_region,
-//             year_establish: data.year_establish,
-//           },
-//         },
-//       },
-//       Type: {
-//         connectOrCreate: {
-//           where: { type_name: data.type_name },
-//           create: { type_name: data.type_name },
-//         },
-//       },
-//     },
-//   },
-//   Available: {
-//     create: {
-//       available_status: data.available_status,
-//     },
-//   },
-// },
+exports.updateCarById = async (id, data) => {
+  const updatedCar = await prisma.cars.update({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      Models: {
+        include: {
+          Transmission: true,
+          Manufacture: true,
+          Type: true,
+        },
+      },
+      Available: true,
+    },
+    data: data,
+  });
+
+  const serializedOptions = JSONBigInt.stringify(updatedCar);
+  return JSONBigInt.parse(serializedOptions);
+};
+
+exports.deleteCarById = async (id) => {
+  const deletedCar = await prisma.cars.delete({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      Models: {
+        include: {
+          Transmission: true,
+          Manufacture: true,
+          Type: true,
+        },
+      },
+      Available: true,
+    },
+  });
+  const serializedOptions = JSONBigInt.stringify(deletedCar);
+  return JSONBigInt.parse(serializedOptions);
+};

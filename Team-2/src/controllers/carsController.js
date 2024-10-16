@@ -25,3 +25,14 @@ exports.createCar = async (req, res, next) => {
   const data = await carsService.createCar(req.body);
   successResponse(res, data);
 };
+
+exports.updateCarById = async (req, res, next) => {
+  const { id } = req.params;
+  const data = await carsService.updateCarById(id, req.body);
+  successResponse(res, data);
+};
+
+exports.deleteCarById = async (req, res, next) => {
+  const data = await carsService.deleteCarById(req.params.id);
+  successResponse(res, data);
+}

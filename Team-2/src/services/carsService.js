@@ -42,9 +42,36 @@ exports.getCarById = async (id) => {
 };
 
 exports.createCar = async (data) => {
-  const newCar = await carsRepository.createCar(data);
-  if (!newCar) {
-    throw new BadRequestError("Failed to create new car");
+  return carsRepository.createCar(data);
+};
+
+exports.updateCarById = async (id, data) => {
+  const existingCar = await carsRepository.getCarById(id);
+  if (!existingCar) {
+    throw new NotFoundError("Car is Not Found!");
   }
-  return newCar;
+
+  data = {
+    ...existingCar,
+    ...data,
+  };
+
+  const updatedCar = await carsRepository.updateCarById(id, data);
+  if (!updatedCar) {
+    throw new InternalServerError(["Failed to update Car!"]);
+  }
+  return updatedCar;
+};
+
+exports.deleteCarById = async (id) => {
+  const existingCar = await carsRepository.getCarById(id);
+  if (!existingCar) {
+    throw new NotFoundError("Car is Not Found!");
+  }
+
+  const deletedCar = await carsRepository.deleteCarById(id);
+  if (!deletedCar) {
+    throw new InternalServerError(["Failed to Delete Car!"]);
+  }
+  return deletedCar;
 };
