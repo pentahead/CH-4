@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Available {
+  id               Int     @id @default(autoincrement())
+  available_status String? @db.VarChar(100)
+  Cars             Cars[]
+}
+
+model Cars {
+  id              Int        @id @default(autoincrement())
+  plate           String?    @db.VarChar(25)
+  model_id        Int?
+  rentPerDay      Float?
+  description     String?    @db.VarChar(255)
+  availableAt     DateTime?  @db.Timestamp(6)
+  availability_id Int?
+  year            Int?
+  image           String?    @db.VarChar(255)
+  Available       Available? @relation(fields: [availability_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Models          Models?    @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Cars_Option {
+  model_id  Int
+  option_id Int
+  Models    Models  @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Options   Options @relation(fields: [option_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([model_id, option_id])
+}
+
+model Cars_Specs {
+  model_id Int
+  spec_id  Int
+  Models   Models @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Specs    Specs  @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([model_id, spec_id])
+}
+
+model Manufacture {
+  id                 Int      @id @default(autoincrement())
+  manufacture_name   String?  @db.VarChar(100)
+  manufacture_region String?  @db.VarChar(100)
+  year_establish     Int?
+  Models             Models[]
+}
+
+model Models {
+  id              Int           @id @default(autoincrement())
+  model_name      String?       @db.VarChar(100)
+  transmission_id Int?
+  capacity        Int?
+  type_id         Int?
+  manufacture_id  Int?
+  Cars            Cars[]
+  Cars_Option     Cars_Option[]
+  Cars_Specs      Cars_Specs[]
+  Manufacture     Manufacture?  @relation(fields: [manufacture_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Transmission    Transmission? @relation(fields: [transmission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Type            Type?         @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Options {
+  id          Int           @id @default(autoincrement())
+  option_name String?       @db.VarChar(100)
+  Cars_Option Cars_Option[]
+}
+
+model Specs {
+  id         Int          @id @default(autoincrement())
+  spec_name  String?      @db.VarChar(100)
+  Cars_Specs Cars_Specs[]
+}
+
+model Transmission {
+  id                Int      @id @default(autoincrement())
+  transmission_name String?  @db.VarChar(100)
+  Models            Models[]
+}
+
+model Type {
+  id        Int      @id @default(autoincrement())
+  type_name String?  @db.VarChar(100)
+  Models    Models[]
+}

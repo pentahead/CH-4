@@ -1,0 +1,28 @@
+{
+  "name": "team-2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon src/index.js",
+    "start": "node src/index.js",
+    "prisma:db:pull": "npx prisma db pull",
+    "prisma:generate": "npx prisma generate",
+    "prisma:refresh": "npm run prisma:db:pull && npm run prisma:generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.21.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
+    "json-bigint": "^1.0.0",
+    "prisma": "^5.21.0",
+    "zod": "^3.23.8"
+  }
+}
